@@ -6,7 +6,9 @@ package mr
 // remember to capitalize all names.
 //
 
-import "os"
+import (
+	"os"
+)
 import "strconv"
 
 //
@@ -22,8 +24,37 @@ type ExampleReply struct {
 	Y int
 }
 
-// Add your RPC definitions here.
+type WorkType int
 
+const (
+	MAP WorkType = iota
+	REDUCE
+)
+
+// Add your RPC definitions here.
+type AcquireWorkRequest struct {
+}
+
+type AcquireWorkResponse struct {
+	// Whether assigned a task, if false, the works are all assigned
+	// It should be query in loop since some task may be failed
+	Acquired bool
+	// Whether it got a map work or a reduce work
+	WorkType WorkType
+	// The work index
+	ID int
+	// The files for processed
+	Files   []string
+	NReduce int
+}
+
+type FinishWorkRequest struct {
+	WorkType WorkType
+	ID       int
+}
+
+type FinishWorkResponse struct {
+}
 
 // Cook up a unique-ish UNIX-domain socket name
 // in /var/tmp, for the master.
